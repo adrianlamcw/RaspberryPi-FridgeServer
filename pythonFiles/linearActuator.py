@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import timers
+import time
 import constants
 
 def extend_actuator(pinA, pinB):
@@ -7,12 +7,12 @@ def extend_actuator(pinA, pinB):
     GPIO.output(pinA, GPIO.HIGH)
     GPIO.output(pinB, GPIO.LOW)
 
-    timers.set_timer(2)
+    time.sleep(2)
 
     GPIO.output(pinA, GPIO.LOW)
     GPIO.output(pinB, GPIO.HIGH)
     
-    timers.set_timer(3)
+    time.sleep(3)
 
 def open_drawer(drawer_id):
     if drawer_id == constants.DRAWER_1:

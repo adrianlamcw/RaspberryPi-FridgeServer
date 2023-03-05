@@ -1,11 +1,12 @@
 from flask import Flask, render_template, jsonify, send_file, abort
 import datetime
-import timers
 import camera
 import RPi.GPIO as GPIO  
 import constants
 import solenoid
 import linearActuator
+import threading
+import keypad
 
 # Set the GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
@@ -20,9 +21,6 @@ GPIO.setup(constants.SOLENOID_1, GPIO.OUT)
 try:
     # here you put your main loop or block of code 
     print('Hello World')
-    # solenoid.set_solenoid_on(constants.SOLENOID_1)
-    # linearActuator.open_drawer(constants.DRAWER_1)
-    # linearActuator.open_drawer(constants.DRAWER_2)
     
     app = Flask(__name__)
     @app.route("/")
@@ -61,9 +59,11 @@ try:
     def unlock(username):
         if(username == "1"):
             solenoid.set_solenoid_off(constants.SOLENOID_1)
+            linearActuator.open_drawer(constants.DRAWER_1)
             print('unlock')
         elif(username == "2"):
             solenoid.set_solenoid_off(constants.SOLENOID_2)
+            linearActuator.open_drawer(constants.DRAWER_2)
         else:
             abort(400, "Incorrect ID!") 
         return f"Unlock, {username}"
@@ -86,6 +86,12 @@ try:
         return send_file(image_path)
 
     if __name__ == "__main__":
+        
+        # Start the while loop in a separate thread
+        t = threading.Thread(target=keypad.keypad_on)
+        t.start()
+
+        # Start the Flask server
         app.run(host='192.168.121.17', port=80, debug=True)
     
 
