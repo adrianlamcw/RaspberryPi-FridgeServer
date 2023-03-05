@@ -5,8 +5,6 @@ import RPi.GPIO as GPIO
 import constants
 import solenoid
 import linearActuator
-import threading
-import keypad
 
 # Set the GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
@@ -17,6 +15,7 @@ GPIO.setup(constants.ACTUATOR_1_PIN_B, GPIO.OUT)
 GPIO.setup(constants.ACTUATOR_2_PIN_A, GPIO.OUT)
 GPIO.setup(constants.ACTUATOR_2_PIN_B, GPIO.OUT)
 GPIO.setup(constants.SOLENOID_1, GPIO.OUT)
+GPIO.setup(constants.SOLENOID_2, GPIO.OUT)
 
 try:
     # here you put your main loop or block of code 
@@ -58,11 +57,11 @@ try:
     @app.route("/unlock/<username>", methods=["GET"])
     def unlock(username):
         if(username == "1"):
-            solenoid.set_solenoid_off(constants.SOLENOID_1)
+            solenoid.solenoid_unlock(constants.SOLENOID_1)
             linearActuator.open_drawer(constants.DRAWER_1)
             print('unlock')
         elif(username == "2"):
-            solenoid.set_solenoid_off(constants.SOLENOID_2)
+            solenoid.solenoid_unlock(constants.SOLENOID_2)
             linearActuator.open_drawer(constants.DRAWER_2)
         else:
             abort(400, "Incorrect ID!") 
@@ -71,10 +70,10 @@ try:
     @app.route("/lock/<username>", methods=["GET"])
     def lock(username):
         if(username == "1"):
-            solenoid.set_solenoid_on(constants.SOLENOID_1)
+            solenoid.solenoid_lock(constants.SOLENOID_1)
             print('lock')
         elif(username == "2"):
-            solenoid.set_solenoid_on(constants.SOLENOID_2)
+            solenoid.solenoid_lock(constants.SOLENOID_2)
         else:
             abort(400, "Incorrect ID!") 
         return f"Lock, {username}"
@@ -86,10 +85,6 @@ try:
         return send_file(image_path)
 
     if __name__ == "__main__":
-        
-        # Start the while loop in a separate thread
-        t = threading.Thread(target=keypad.keypad_on)
-        t.start()
 
         # Start the Flask server
         app.run(host='192.168.121.17', port=80, debug=True)
