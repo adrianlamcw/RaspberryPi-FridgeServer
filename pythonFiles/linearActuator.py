@@ -11,6 +11,8 @@ def extend_actuator(pinA, pinB):
 
     GPIO.output(pinA, GPIO.LOW)
     GPIO.output(pinB, GPIO.HIGH)
+    
+    timers.set_timer(6)
 
 def open_drawer(drawer_id):
     if drawer_id == constants.DRAWER_0:
