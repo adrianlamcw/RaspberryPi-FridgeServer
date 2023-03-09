@@ -39,18 +39,28 @@ try:
         
     @app.route("/status", methods=["GET"])
     def get_status():
+        if GPIO.input(constants.SOLENOID_1):
+            lock_1 = False
+        else:
+            lock_1 = True
+        if GPIO.input(constants.SOLENOID_2):
+            lock_2 = False
+        else:
+            lock_2 = True
         data = {
-            "temperature": "4",
+            "temperature": 22,
             "drawerData": [
                 {
                 "id": 1,
                 "name": "Test User 1",
-                "camera": True
+                "camera": True,
+                "lock": lock_1
                 },
                 {
                 "id": 2,
                 "name": "Test User 2",
-                "camera": False
+                "camera": False,
+                "lock": lock_2
                 }]}
         return jsonify(data)
         

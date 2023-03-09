@@ -17,5 +17,5 @@ def extend_actuator(pinA, pinB):
 def open_drawer(drawer_id):
     if drawer_id == constants.DRAWER_1:
         extend_actuator(constants.ACTUATOR_1_PIN_A, constants.ACTUATOR_1_PIN_B)
-    if drawer_id == constants.DRAWER_2:
+    elif drawer_id == constants.DRAWER_2:
         extend_actuator(constants.ACTUATOR_2_PIN_A, constants.ACTUATOR_2_PIN_B)

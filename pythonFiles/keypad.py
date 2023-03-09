@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 import time
 import constants
 import solenoid
+import linearActuator
 
 GPIO.setmode(GPIO.BCM)
 # These are the GPIO pin numbers where the
@@ -24,6 +25,9 @@ C4 = 21
 
 secretCode_1 = "1111"
 secretCode_2 = "2222"
+secretCode_1_lock = "1111B"
+secretCode_2_lock = "2222B"
+
 input = ""
 
 # Setup GPIO
@@ -96,6 +100,12 @@ def checkSpecialKeys():
             # TODO: Unlock a door, turn a light on, etc.
             solenoid.solenoid_unlock(constants.SOLENOID_2)
             linearActuator.open_drawer(constants.DRAWER_2)
+        elif input == secretCode_1_lock:
+            print("Code correct! Lock Drawer 1")
+            solenoid.solenoid_lock(constants.SOLENOID_1)
+        elif input == secretCode_2_lock:
+            print("Code correct! Lock Drawer 2")
+            solenoid.solenoid_lock(constants.SOLENOID_2)
         else:
             print("Incorrect code!")
             # TODO: Sound an alarm, send an email, etc.
