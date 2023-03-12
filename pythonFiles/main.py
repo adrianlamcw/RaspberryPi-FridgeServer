@@ -4,16 +4,15 @@ import camera
 import RPi.GPIO as GPIO  
 import constants
 import solenoid
-import linearActuator
 
 # Set the GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-GPIO.setup(constants.ACTUATOR_1_PIN_A, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_1_PIN_B, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_2_PIN_A, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_2_PIN_B, GPIO.OUT)
+GPIO.setup(constants.LED_1_PIN, GPIO.OUT)
+GPIO.setup(constants.LED_2_PIN, GPIO.OUT)
+GPIO.setup(constants.SWITCH_1_PIN, GPIO.IN)
+GPIO.setup(constants.SWITCH_2_PIN, GPIO.IN)
 GPIO.setup(constants.SOLENOID_1, GPIO.OUT)
 GPIO.setup(constants.SOLENOID_2, GPIO.OUT)
 
@@ -67,12 +66,9 @@ try:
     @app.route("/unlock/<username>", methods=["GET"])
     def unlock(username):
         if(username == "1"):
-            solenoid.solenoid_unlock(constants.SOLENOID_1)
-            linearActuator.open_drawer(constants.DRAWER_1)
-            print('unlock')
+            solenoid.solenoid_unlock(constants.SOLENOID_1, constants.LED_1_PIN)
         elif(username == "2"):
-            solenoid.solenoid_unlock(constants.SOLENOID_2)
-            linearActuator.open_drawer(constants.DRAWER_2)
+            solenoid.solenoid_unlock(constants.SOLENOID_2, constants.LED_2_PIN)
         else:
             abort(400, "Incorrect ID!") 
         return f"Unlock, {username}"
@@ -80,10 +76,11 @@ try:
     @app.route("/lock/<username>", methods=["GET"])
     def lock(username):
         if(username == "1"):
-            solenoid.solenoid_lock(constants.SOLENOID_1)
-            print('lock')
+            if not solenoid.solenoid_lock(constants.SOLENOID_1, constants.LED_1_PIN, constants.SWITCH_1_PIN):
+                abort(400, "Drawer not closed properly")
         elif(username == "2"):
-            solenoid.solenoid_lock(constants.SOLENOID_2)
+            if not solenoid.solenoid_lock(constants.SOLENOID_2, constants.LED_2_PIN, constants.SWITCH_2_PIN):
+                abort(400, "Drawer not closed properly")
         else:
             abort(400, "Incorrect ID!") 
         return f"Lock, {username}"
@@ -95,7 +92,6 @@ try:
         return send_file(image_path)
 
     if __name__ == "__main__":
-
         # Start the Flask server
         app.run(host='192.168.121.17', port=80, debug=True)
     

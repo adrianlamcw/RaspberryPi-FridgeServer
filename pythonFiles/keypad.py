@@ -7,7 +7,6 @@ import RPi.GPIO as GPIO
 import time
 import constants
 import solenoid
-import linearActuator
 
 GPIO.setmode(GPIO.BCM)
 # These are the GPIO pin numbers where the
@@ -35,10 +34,10 @@ GPIO.setup(L1, GPIO.OUT)
 GPIO.setup(L2, GPIO.OUT)
 GPIO.setup(L3, GPIO.OUT)
 GPIO.setup(L4, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_1_PIN_A, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_1_PIN_B, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_2_PIN_A, GPIO.OUT)
-GPIO.setup(constants.ACTUATOR_2_PIN_B, GPIO.OUT)
+GPIO.setup(constants.LED_1_PIN, GPIO.OUT)
+GPIO.setup(constants.LED_2_PIN, GPIO.OUT)
+GPIO.setup(constants.SWITCH_1_PIN, GPIO.IN)
+GPIO.setup(constants.SWITCH_2_PIN, GPIO.IN)
 GPIO.setup(constants.SOLENOID_1, GPIO.OUT)
 GPIO.setup(constants.SOLENOID_2, GPIO.OUT)
 
@@ -93,19 +92,17 @@ def checkSpecialKeys():
         if input == secretCode_1:
             print("Code correct! Unlock Drawer 1")
             # TODO: Unlock a door, turn a light on, etc.
-            solenoid.solenoid_unlock(constants.SOLENOID_1)
-            linearActuator.open_drawer(constants.DRAWER_1)
+            solenoid.solenoid_unlock(constants.SOLENOID_1, constants.LED_1_PIN)
         elif input == secretCode_2:
             print("Code correct! Unlock Drawer 2")
             # TODO: Unlock a door, turn a light on, etc.
-            solenoid.solenoid_unlock(constants.SOLENOID_2)
-            linearActuator.open_drawer(constants.DRAWER_2)
+            solenoid.solenoid_unlock(constants.SOLENOID_2, constants.LED_2_PIN)
         elif input == secretCode_1_lock:
             print("Code correct! Lock Drawer 1")
-            solenoid.solenoid_lock(constants.SOLENOID_1)
+            solenoid.solenoid_lock(constants.SOLENOID_1, constants.LED_1_PIN, constants.SWITCH_1_PIN)
         elif input == secretCode_2_lock:
             print("Code correct! Lock Drawer 2")
-            solenoid.solenoid_lock(constants.SOLENOID_2)
+            solenoid.solenoid_lock(constants.SOLENOID_2, constants.LED_2_PIN, constants.SWITCH_2_PIN)
         else:
             print("Incorrect code!")
             # TODO: Sound an alarm, send an email, etc.
