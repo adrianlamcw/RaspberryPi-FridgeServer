@@ -22,10 +22,10 @@ C2 = 16
 C3 = 20
 C4 = 21
 
-secretCode_1 = "1111"
-secretCode_2 = "2222"
-secretCode_1_lock = "1111B"
-secretCode_2_lock = "2222B"
+secretCode_1 = "1"
+secretCode_2 = "2"
+secretCode_1_lock = "1B"
+secretCode_2_lock = "2B"
 
 input = ""
 

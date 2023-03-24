@@ -51,13 +51,13 @@ try:
             "drawerData": [
                 {
                 "id": 1,
-                "name": "Test User 1",
+                "name": "Drawer 1",
                 "camera": True,
                 "lock": lock_1
                 },
                 {
                 "id": 2,
-                "name": "Test User 2",
+                "name": "Drawer 2",
                 "camera": False,
                 "lock": lock_2
                 }]}
@@ -93,7 +93,7 @@ try:
 
     if __name__ == "__main__":
         # Start the Flask server
-        app.run(host='192.168.121.17', port=80, debug=True)
+        app.run(host='192.168.216.17', port=80, debug=True)
     
 
 except KeyboardInterrupt:  
